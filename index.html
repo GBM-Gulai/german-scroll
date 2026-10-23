@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#170f33">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>German Scroll</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header id="hud">
+  <div class="pill" id="streak">🔥 <b>0</b></div>
+  <div class="pill" id="level"><span id="lvl">Lv 1</span><div class="bar"><i></i></div></div>
+  <div class="pill" id="xp">⭐ <b>0</b></div>
+  <button class="pill" id="mute" aria-label="Ton an/aus">🔊</button>
+</header>
+<main id="feed"></main>
+<canvas id="fx"></canvas>
+<script src="content.js"></script>
+<script src="content/a1.js"></script>
+<script src="content/a2.js"></script>
+<script src="content/b1.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
