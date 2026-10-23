@@ -229,5 +229,91 @@ pack("A2", {
       qs: [["Was hat Elif?", ["Eine Grippe", "Kopfweh", "Eine Verletzung"]],
            ["Wie lange muss sie zu Hause bleiben?", ["Eine Woche", "Drei Tage", "Einen Tag"]],
            ["Was bekommt sie für die Firma?", ["Eine Krankmeldung", "Ein Rezept", "Einen Termin"]]] }
+  ],
+
+  lessons: [
+    { e: "🔁", t: "The past: Perfekt",
+      slides: [
+        { h: "How it works", p: "When speaking, Austrians use the <b>Perfekt</b> for the past: <b>haben / sein</b> at position 2 + <b>Partizip II</b> at the end.",
+          ex: ["Ich <mark>habe</mark> gestern Pizza <mark>gegessen</mark>.", "Wir <mark>sind</mark> nach Graz <mark>gefahren</mark>."] },
+        { h: "haben or sein?", p: "<b>sein</b> for movement from A to B and change of state (gehen, fahren, fliegen, kommen, aufstehen, werden) – plus <b>sein</b> and <b>bleiben</b> themselves. Everything else: <b>haben</b>. Austrian bonus: ich <b>bin</b> gesessen / gestanden / gelegen.",
+          ex: ["Ich bin zu Hause geblieben.", "Ich habe lange geschlafen."] },
+        { h: "Building the Partizip II", table: { head: ["Type", "Rule", "Example"], rows: [
+          ["regular", "ge- … -t", "machen → gemacht"], ["irregular", "ge- … -en (vowel may change)", "trinken → getrunken"],
+          ["separable", "prefix + ge + verb", "einkaufen → eingekauft"], ["be-, ver-, er- …", "no ge-", "bezahlen → bezahlt"], ["-ieren", "no ge-", "telefonieren → telefoniert"]] } }
+      ],
+      quiz: [["Ich ___ um sechs Uhr aufgestanden.", ["bin", "habe", "hat"]], ["Wir haben die Rechnung ___. (bezahlen)", ["bezahlt", "gebezahlt", "bezahlen"]],
+             ["Er hat mich ___. (anrufen)", ["angerufen", "geanruft", "anrufen"]]] },
+
+    { e: "🎁", t: "The Dativ",
+      slides: [
+        { h: "When do I need the Dativ?", p: "1) The <b>person who receives</b> something (Wem? – to whom?). 2) After <b>Dativ prepositions</b>. 3) After verbs like helfen, danken, gefallen, gehören, schmecken.",
+          ex: ["Ich gebe dem Kind ein Eis.", "Das Kleid gefällt mir."] },
+        { h: "Articles", table: { head: ["", "Nominativ", "Dativ"], rows: [["masculine", "der / ein", "<b>dem / einem</b>"], ["feminine", "die / eine", "<b>der / einer</b>"],
+          ["neuter", "das / ein", "<b>dem / einem</b>"], ["plural", "die", "<b>den</b> + -n (den Kindern)"]] } },
+        { h: "Dativ prepositions", p: "<b>aus, bei, mit, nach, seit, von, zu</b> – always Dativ. Say them like a little song!",
+          ex: ["Ich fahre mit dem Bus zur Arbeit.", "Ich wohne seit einem Jahr bei meiner Tante."] },
+        { h: "Pronouns", table: { head: ["Nominativ", "ich", "du", "er", "sie", "es", "wir", "ihr", "sie/Sie"], rows: [["Dativ", "mir", "dir", "ihm", "ihr", "ihm", "uns", "euch", "ihnen/Ihnen"]] } }
+      ],
+      quiz: [["Ich helfe ___ Frau. (die)", ["der", "die", "dem"]], ["Ich komme gerade ___ der Arbeit. (from)", ["von", "zu", "mit"]], ["Schmeckt ___ das Essen? (you – du)", ["dir", "dich", "du"]]] },
+
+    { e: "📦", t: "Wo? or Wohin?",
+      slides: [
+        { h: "Two-way prepositions", p: "<b>an, auf, hinter, in, neben, über, unter, vor, zwischen</b> can take two cases.",
+          table: { head: ["Question", "Case", "Example"], rows: [["Wohin? (movement)", "Akkusativ", "Ich gehe in <b>den</b> Park."], ["Wo? (location)", "Dativ", "Ich bin in <b>dem</b> (= im) Park."]] } },
+        { h: "Verb pairs", table: { head: ["Wohin? + Akk (action)", "Wo? + Dat (position)"], rows: [["legen – put (lying)", "liegen – lie"],
+          ["stellen – put (standing)", "stehen – stand"], ["hängen – hang (action)", "hängen – hang (state)"], ["setzen – sit (sb.) down", "sitzen – sit"]] },
+          ex: ["Ich lege das Handy auf den Tisch.", "Das Handy liegt auf dem Tisch."] }
+      ],
+      quiz: [["Ich stelle die Flasche in ___ Kühlschrank.", ["den", "dem", "der"]], ["Das Bild hängt an ___ Wand. (die Wand)", ["der", "die", "den"]]] },
+
+    { e: "🏃", t: "Subordinate clauses",
+      slides: [
+        { h: "Verb to the end", p: "After <b>weil, dass, wenn, ob, als, obwohl</b> and in indirect questions the conjugated verb goes to the <b>end</b>. Always put a comma before.",
+          ex: ["Ich lerne Deutsch, weil ich in Wien <mark>wohne</mark>.", "Ich weiß nicht, wo der Bahnhof <mark>ist</mark>."] },
+        { h: "With two verbs", p: "The conjugated verb is last – after the infinitive or participle.",
+          ex: ["Ich komme nicht, weil ich arbeiten <mark>muss</mark>.", "Er sagt, dass er schon angerufen <mark>hat</mark>."] },
+        { h: "Starting with the clause", p: "The whole clause counts as position 1 – so the main verb comes right after the comma: <b>verb, verb</b>.",
+          ex: ["Wenn ich Zeit <mark>habe</mark>, <mark>komme</mark> ich."] },
+        { h: "Which word?", table: { head: ["Word", "Meaning"], rows: [["weil", "because"], ["dass", "that"], ["wenn", "if / when(ever)"], ["ob", "whether"], ["als", "when (once, in the past)"]] } }
+      ],
+      quiz: [["Ich bleibe zu Hause, weil …", ["ich krank bin.", "ich bin krank.", "bin ich krank."]], ["Wenn es regnet, …", ["nehme ich den Bus.", "ich nehme den Bus.", "ich den Bus nehme."]]] },
+
+    { e: "📈", t: "Comparing things",
+      slides: [
+        { h: "Three steps", table: { head: ["Base", "Comparative", "Superlative"], rows: [["schnell", "schneller", "am schnellsten"], ["billig", "billiger", "am billigsten"],
+          ["alt", "<b>ä</b>lter", "am <b>ä</b>ltesten"], ["groß", "gr<b>ö</b>ßer", "am gr<b>ö</b>ßten"]] } },
+        { h: "als and wie", p: "Different: comparative + <b>als</b>. The same: <b>so … wie</b>.", ex: ["Wien ist größer als Graz.", "Linz ist nicht so groß wie Wien."] },
+        { h: "Irregular stars", table: { head: ["Base", "Comparative", "Superlative"], rows: [["gut", "besser", "am besten"], ["gern", "lieber", "am liebsten"],
+          ["viel", "mehr", "am meisten"], ["hoch", "höher", "am höchsten"]] } }
+      ],
+      quiz: [["Der Zug ist ___ als das Auto.", ["schneller", "schnell", "mehr schnell"]], ["Ich trinke am ___ Tee.", ["liebsten", "gernsten", "lieber"]]] },
+
+    { e: "🪞", t: "Reflexive verbs",
+      slides: [
+        { h: "The action comes back", p: "Reflexive verbs need a pronoun that points back to the subject: sich waschen, sich anziehen, sich freuen, sich treffen, sich beeilen.",
+          table: { head: ["", "Akkusativ"], rows: [["ich", "mich"], ["du", "dich"], ["er / sie / es", "sich"], ["wir", "uns"], ["ihr", "euch"], ["sie / Sie", "sich"]] } },
+        { h: "Often with a preposition", ex: ["Ich freue mich auf den Urlaub.", "Er interessiert sich für Fußball.", "Wir treffen uns um acht."] }
+      ],
+      quiz: [["Du musst ___ beeilen!", ["dich", "dir", "sich"]], ["Sie (they) treffen ___ im Café.", ["sich", "uns", "ihnen"]]] },
+
+    { e: "⏳", t: "war, hatte, konnte",
+      slides: [
+        { h: "Short past forms", p: "For <b>sein, haben</b> and the <b>modal verbs</b> people use the simple past (Präteritum) instead of the Perfekt.",
+          table: { head: ["", "sein", "haben", "können", "müssen"], rows: [["ich", "war", "hatte", "konnte", "musste"], ["du", "warst", "hattest", "konntest", "musstest"],
+            ["er / sie", "war", "hatte", "konnte", "musste"], ["wir", "waren", "hatten", "konnten", "mussten"]] } },
+        { h: "In real life", ex: ["Gestern war ich beim Arzt.", "Ich hatte keine Zeit.", "Wir konnten nicht kommen, wir mussten arbeiten."] }
+      ],
+      quiz: [["Letztes Jahr ___ wir in Kroatien.", ["waren", "hatten", "sind"]], ["Ich ___ gestern nicht kommen.", ["konnte", "kann", "könnte"]]] },
+
+    { e: "🔗", t: "aber, denn, deshalb …",
+      slides: [
+        { h: "Position 0 – nothing changes", p: "<b>und, aber, oder, denn, sondern</b> connect two main clauses without changing the word order.",
+          ex: ["Ich bin müde, aber ich gehe noch einkaufen.", "Ich bleibe zu Hause, denn ich bin krank."] },
+        { h: "Position 1 – the verb follows", p: "<b>deshalb, trotzdem, dann, danach, außerdem</b> take position 1, so the verb comes right after them.",
+          ex: ["Ich bin krank, deshalb bleibe ich zu Hause.", "Es regnet, trotzdem gehen wir spazieren."] },
+        { h: "Compare", table: { head: ["Word", "Word order"], rows: [["denn ich bin krank", "subject + verb"], ["deshalb bleibe ich", "verb + subject"], ["weil ich krank bin", "verb at the end"]] } }
+      ],
+      quiz: [["Ich habe Hunger, deshalb …", ["koche ich jetzt.", "ich koche jetzt.", "ich jetzt koche."]], ["Ich komme nicht, denn …", ["ich habe keine Zeit.", "habe ich keine Zeit.", "ich keine Zeit habe."]]] }
   ]
 });

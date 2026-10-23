@@ -10,12 +10,14 @@
      odd:     [odd one out, word, word, word, reason]
      grammar: { e, t, rule, ex: [...], q, o: [correct, wrong, wrong], why }
      reads:   { kind: chat|note|menu|story|mail|sign, title, ..., gloss: {word: translation}, qs: [[question, [correct, wrong, wrong]]] }
+     lessons: { e, t, slides: [{ h, p?, table?: { head: [...], rows: [[...]] }, ex?: [...] }], quiz: [[question, [correct, wrong, wrong]]] }
+              (in ex, text after " – " is not read aloud, so "der Tisch – the table" only speaks "der Tisch")
 */
 const LEVELS = ["A1", "A2", "B1"];
 const LEVEL_NAMES = ["Anfänger", "Grundlagen", "Mittelstufe"];
-const NOUN_DATA = [], GAPS = [], BUILD = [], TF = [], ODD = [], GRAMMAR = [], READS = [];
-const LV = { nouns: [], gaps: [], build: [], tf: [], odd: [], grammar: [], reads: [] };   // level (1–3) of every item
-const PACK_TARGET = { nouns: NOUN_DATA, gaps: GAPS, build: BUILD, tf: TF, odd: ODD, grammar: GRAMMAR, reads: READS };
+const NOUN_DATA = [], GAPS = [], BUILD = [], TF = [], ODD = [], GRAMMAR = [], READS = [], LESSONS = [];
+const LV = { nouns: [], gaps: [], build: [], tf: [], odd: [], grammar: [], reads: [], lessons: [] };   // level (1–3) of every item
+const PACK_TARGET = { nouns: NOUN_DATA, gaps: GAPS, build: BUILD, tf: TF, odd: ODD, grammar: GRAMMAR, reads: READS, lessons: LESSONS };
 function pack(level, data) {
   const l = LEVELS.indexOf(level) + 1;
   for (const key in data) for (const item of data[key]) { PACK_TARGET[key].push(item); LV[key].push(l); }

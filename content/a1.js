@@ -236,5 +236,113 @@ pack("A1", {
       qs: [["Wie viel kostet 1 kg Äpfel?", ["1,99 €", "2 €", "30 %"]],
            ["Wann ist der Supermarkt am Samstag offen?", ["7:30–18 Uhr", "7:30–20 Uhr", "Gar nicht"]],
            ["Kannst du am Sonntag einkaufen?", ["Nein, da ist geschlossen", "Ja, bis 18 Uhr", "Ja, den ganzen Tag"]]] }
+  ],
+
+  lessons: [
+    { e: "🏷️", t: "der, die, das",
+      slides: [
+        { h: "Every noun has a gender", p: "German nouns are <b>masculine</b> (der), <b>feminine</b> (die) or <b>neuter</b> (das). The gender belongs to the word – always learn a noun <b>together with its article</b>.",
+          ex: ["der Tisch – the table", "die Lampe – the lamp", "das Buch – the book"] },
+        { h: "Nouns start with a capital", p: "Every noun is written with a capital letter, also in the middle of a sentence. That makes them easy to spot!",
+          ex: ["Ich trinke einen Kaffee mit Milch."] },
+        { h: "Helpful patterns", table: { head: ["Ending / group", "Article", "Example"], rows: [
+          ["-ung, -heit, -keit, -schaft", "die", "die Wohnung"], ["most words on -e", "die", "die Tasche"],
+          ["-chen, -lein", "das", "das Mädchen"], ["days, months, seasons", "der", "der Montag"], ["-er (people, tools)", "often der", "der Lehrer"]] } },
+        { h: "Plural = always die", p: "In the plural the article is <b>die</b> for every gender. The noun itself changes in different ways – learn the plural with the word.",
+          ex: ["der Tisch → die Tische", "die Lampe → die Lampen", "das Buch → die Bücher"] }
+      ],
+      quiz: [["___ Zeitung (newspaper)", ["die", "der", "das"]], ["___ Mädchen (girl)", ["das", "die", "der"]], ["Plural: ___ Bücher", ["die", "das", "der"]]] },
+
+    { e: "👥", t: "Verbs in the present",
+      slides: [
+        { h: "Stem + ending", p: "Take the infinitive (<b>wohn</b>en), remove <b>-en</b> and add the ending for the person.",
+          table: { head: ["", "wohnen"], rows: [["ich", "wohn<b>e</b>"], ["du", "wohn<b>st</b>"], ["er / sie / es", "wohn<b>t</b>"], ["wir", "wohn<b>en</b>"], ["ihr", "wohn<b>t</b>"], ["sie / Sie", "wohn<b>en</b>"]] } },
+        { h: "Vowel change with du and er/sie", p: "Some common verbs change their vowel – but <b>only</b> with du and er/sie/es.",
+          table: { head: ["", "fahren", "sprechen", "lesen"], rows: [["ich", "fahre", "spreche", "lese"], ["du", "f<b>ä</b>hrst", "spr<b>i</b>chst", "l<b>ie</b>st"],
+            ["er / sie", "f<b>ä</b>hrt", "spr<b>i</b>cht", "l<b>ie</b>st"], ["wir", "fahren", "sprechen", "lesen"]] } },
+        { h: "The two most important verbs",
+          table: { head: ["", "sein", "haben"], rows: [["ich", "bin", "habe"], ["du", "bist", "hast"], ["er / sie / es", "ist", "hat"], ["wir", "sind", "haben"], ["ihr", "seid", "habt"], ["sie / Sie", "sind", "haben"]] },
+          ex: ["Ich bin müde.", "Wir haben heute Zeit."] }
+      ],
+      quiz: [["Du ___ in Wien. (wohnen)", ["wohnst", "wohnt", "wohne"]], ["Er ___ gut Deutsch. (sprechen)", ["spricht", "sprecht", "sprichst"]], ["Wir ___ müde. (sein)", ["sind", "seid", "ist"]]] },
+
+    { e: "🥈", t: "Word order basics",
+      slides: [
+        { h: "Position 2 is the verb's seat", p: "In a statement the conjugated verb is always the <b>second element</b>. Position 1 can be the subject, a time, a place …",
+          table: { head: ["Position 1", "Verb", "Rest"], rows: [["Ich", "gehe", "heute ins Kino."], ["Heute", "gehe", "ich ins Kino."], ["In Wien", "wohne", "ich seit 2022."]] } },
+        { h: "W-questions", p: "Question word first, then the verb.", ex: ["Wo wohnst du?", "Was machst du heute?", "Wann kommt der Bus?"] },
+        { h: "Yes/no questions", p: "Start directly with the verb. Answer with <b>Ja</b> or <b>Nein</b> – or <b>Doch</b> when you say yes to a negative question.",
+          ex: ["Kommst du morgen?", "Hast du keine Zeit? – Doch!"] }
+      ],
+      quiz: [["Which is correct?", ["Am Montag habe ich frei.", "Am Montag ich habe frei.", "Am Montag ich frei habe."]],
+             ["Which is a yes/no question?", ["Wohnst du in Graz?", "Wo wohnst du?", "Du wohnst in Graz."]]] },
+
+    { e: "🎯", t: "The Akkusativ",
+      slides: [
+        { h: "What is the Akkusativ?", p: "It marks the <b>direct object</b> – the thing or person the action happens to. Ask: <b>Wen oder was?</b> (whom or what?)",
+          ex: ["Ich kaufe einen Apfel. – What do I buy? An apple."] },
+        { h: "Only masculine changes", table: { head: ["", "Nominativ", "Akkusativ"], rows: [
+          ["masculine", "der / ein / kein", "<b>den / einen / keinen</b>"], ["feminine", "die / eine / keine", "die / eine / keine"],
+          ["neuter", "das / ein / kein", "das / ein / kein"], ["plural", "die / – / keine", "die / – / keine"]] } },
+        { h: "Typical Akkusativ verbs", p: "haben, brauchen, kaufen, sehen, suchen, nehmen, möchten, es gibt …",
+          ex: ["Ich brauche einen Termin.", "Es gibt keinen Kaffee mehr."] },
+        { h: "Pronouns", table: { head: ["Nominativ", "ich", "du", "er", "sie", "es", "wir", "ihr", "sie/Sie"], rows: [["Akkusativ", "mich", "dich", "<b>ihn</b>", "sie", "es", "uns", "euch", "sie/Sie"]] },
+          ex: ["Ich sehe ihn morgen."] }
+      ],
+      quiz: [["Ich suche ___ Schlüssel. (der)", ["den", "der", "dem"]], ["Es gibt ___ Problem. (das – no problem)", ["kein", "keinen", "keine"]], ["Kennst du ___? (him)", ["ihn", "er", "ihm"]]] },
+
+    { e: "🚫", t: "nicht or kein?",
+      slides: [
+        { h: "kein = no / not a", p: "Negate a noun with <b>ein</b> or <b>no article</b> using <b>kein</b>. It takes the same endings as ein.",
+          ex: ["Ich habe ein Auto. → Ich habe kein Auto.", "Ich habe Zeit. → Ich habe keine Zeit."] },
+        { h: "nicht = everything else", p: "Use <b>nicht</b> for verbs, adjectives, adverbs and nouns with der/die/das or mein/dein.",
+          ex: ["Ich komme nicht.", "Das ist nicht teuer.", "Das ist nicht mein Handy."] },
+        { h: "Where does nicht go?", p: "Usually <b>at the end</b> – but <b>before</b> adjectives, places and the second verb part.",
+          ex: ["Ich verstehe das nicht.", "Ich wohne nicht in Wien.", "Ich kann heute nicht kommen."] }
+      ],
+      quiz: [["Ich habe ___ Hunger. (der Hunger)", ["keinen", "nicht", "kein"]], ["Das Essen ist ___ gut.", ["nicht", "kein", "keine"]]] },
+
+    { e: "🎒", t: "Modal verbs",
+      slides: [
+        { h: "The sentence bracket", p: "The modal verb is conjugated at position 2. The main verb goes to the <b>end</b> in the infinitive – like two brackets around the sentence.",
+          ex: ["Ich <mark>muss</mark> heute lange <mark>arbeiten</mark>.", "<mark>Kannst</mark> du mich <mark>abholen</mark>?"] },
+        { h: "Forms", p: "ich and er/sie have the <b>same form</b> – with no ending!",
+          table: { head: ["", "können", "müssen", "wollen", "dürfen", "möchten"], rows: [["ich", "kann", "muss", "will", "darf", "möchte"],
+            ["du", "kannst", "musst", "willst", "darfst", "möchtest"], ["er / sie", "kann", "muss", "will", "darf", "möchte"], ["wir", "können", "müssen", "wollen", "dürfen", "möchten"]] } },
+        { h: "Meanings", table: { head: ["Verb", "Meaning"], rows: [["können", "can, be able to"], ["müssen", "must, have to"], ["wollen", "want to"],
+          ["dürfen", "may, be allowed to"], ["möchten", "would like to (polite)"], ["sollen", "should, be supposed to"]] } }
+      ],
+      quiz: [["Er ___ gut schwimmen. (können)", ["kann", "kannt", "können"]],
+             ["Which is correct?", ["Ich möchte einen Kaffee bestellen.", "Ich möchte bestellen einen Kaffee.", "Ich bestellen möchte einen Kaffee."]]] },
+
+    { e: "✂️", t: "Separable verbs",
+      slides: [
+        { h: "Prefix + verb", p: "Many verbs have a small prefix: <b>auf</b>stehen, <b>ein</b>kaufen, <b>an</b>rufen, <b>mit</b>kommen, <b>fern</b>sehen. In a normal sentence the prefix jumps to the <b>end</b>.",
+          ex: ["Ich <mark>stehe</mark> um sieben Uhr <mark>auf</mark>.", "Wir <mark>kaufen</mark> heute <mark>ein</mark>."] },
+        { h: "Together again", p: "When the verb is at the end (for example with a modal verb), it stays in one piece.",
+          ex: ["Ich muss morgen früh aufstehen.", "Kannst du mich anrufen?"] },
+        { h: "Typical prefixes", p: "<b>ab, an, auf, aus, ein, mit, nach, vor, zu, zurück, fern</b> – they are stressed when you speak: <b>AUF</b>stehen, <b>EIN</b>kaufen." }
+      ],
+      quiz: [["Der Film ___ um 20 Uhr ___. (anfangen)", ["fängt … an", "anfängt … –", "fangt … an"]], ["Ich ___ heute nicht ___. (mitkommen)", ["komme … mit", "mitkomme … –", "kommen … mit"]]] },
+
+    { e: "🕒", t: "Numbers and time",
+      slides: [
+        { h: "21 = one-and-twenty", p: "From 21 on, German says the <b>ones first</b>: einundzwanzig (1 + 20). Listen for the end of the word!",
+          table: { head: ["Number", "German"], rows: [["21", "einundzwanzig"], ["34", "vierunddreißig"], ["57", "siebenundfünfzig"], ["99", "neunundneunzig"], ["100", "(ein)hundert"]] } },
+        { h: "Asking the time", p: "<b>Wie spät ist es?</b> or <b>Wie viel Uhr ist es?</b> Official times use 24 hours: <b>14:30 Uhr</b> = vierzehn Uhr dreißig.",
+          ex: ["Der Zug fährt um 18:15 Uhr."] },
+        { h: "Everyday time – the halb trap", p: "<b>halb vier</b> = half way to four = <b>3:30</b>.",
+          table: { head: ["Time", "Spoken"], rows: [["3:15", "Viertel nach drei"], ["3:30", "halb <b>vier</b> (!)"], ["3:45", "Viertel vor vier · AT: dreiviertel vier"], ["3:50", "zehn vor vier"]] } }
+      ],
+      quiz: [["vierundsechzig = ?", ["64", "46", "604"]], ["Es ist halb acht. = ?", ["7:30", "8:30", "8:15"]]] },
+
+    { e: "👤", t: "mein, dein, sein …",
+      slides: [
+        { h: "Who does it belong to?", table: { head: ["Person", "Possessive"], rows: [["ich", "mein"], ["du", "dein"], ["er / es", "sein"], ["sie (she)", "ihr"],
+          ["wir", "unser"], ["ihr", "euer"], ["sie (they) / Sie", "ihr / Ihr"]] } },
+        { h: "Endings like ein / kein", p: "Possessives take the same endings as <b>ein</b>: feminine and plural add <b>-e</b>, masculine Akkusativ adds <b>-en</b>.",
+          ex: ["Das ist mein Bruder und meine Schwester.", "Ich suche meinen Schlüssel."] }
+      ],
+      quiz: [["Das ist ___ Tasche. (my – die Tasche)", ["meine", "mein", "meinen"]], ["Maria ruft ___ Mutter an. (her)", ["ihre", "seine", "ihr"]]] }
   ]
 });

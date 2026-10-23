@@ -220,3 +220,58 @@ mark { background: #facc15; color: #1a1300; border-radius: 5px; padding: 0 4px; 
   * { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition: none !important; }
   .timer i { animation-duration: var(--ms) !important; }
 }
+
+/* ---------- lessons ---------- */
+.t-lesson { background: linear-gradient(165deg, #134e4a, #1e3a8a 60%, #4c1d95); }
+.t-pruefung { background: linear-gradient(165deg, #78350f, #9a3412 45%, #831843); }
+.l-title { font-size: clamp(24px, 7vw, 30px); font-weight: 900; line-height: 1.15; text-wrap: balance; }
+.segs { display: flex; gap: 5px; }
+.segs i { flex: 1; height: 5px; border-radius: 5px; background: rgba(255,255,255,.25); transition: background .3s; }
+.segs i.on { background: #fff; }
+.l-stage { display: flex; flex-direction: column; gap: 12px; }
+.l-stage.pop { animation: popIn .3s; }
+.l-h { font-size: 21px; font-weight: 900; color: #fde68a; }
+.l-p { font-size: 17.5px; line-height: 1.5; color: #e0e7ff; }
+.l-p b { color: #fde68a; }
+.l-tablewrap { overflow-x: auto; border-radius: 14px; background: rgba(0,0,0,.25); }
+.l-table { border-collapse: collapse; width: 100%; font-size: 16px; }
+.l-table th, .l-table td { padding: 8px 10px; text-align: left; border-bottom: 1px solid rgba(255,255,255,.1); white-space: nowrap; }
+.l-table th { font-size: 12px; text-transform: uppercase; letter-spacing: .05em; color: #c7d2fe; }
+.l-table td:first-child { color: #c7d2fe; font-weight: 800; }
+.l-table b { color: #fde68a; }
+.l-nav { display: grid; grid-template-columns: 64px 1fr; gap: 10px; }
+.l-back:disabled { opacity: .35; }
+
+/* ---------- start card: progress path ---------- */
+.hero .logo { font-size: clamp(40px, 12vw, 58px); }
+.hero .logo span { display: inline; font-size: .8em; margin: 0; }
+.path { width: 100%; max-width: 420px; background: rgba(0,0,0,.25); border-radius: 20px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.path-h { display: flex; justify-content: space-between; align-items: baseline; font-weight: 900; font-size: 18px; }
+.path-h b { font-size: 26px; color: var(--gold); font-variant-numeric: tabular-nums; }
+.bar.big { height: 12px; }
+.path-rows { display: flex; flex-direction: column; gap: 4px; font-size: 15px; font-weight: 700; }
+.path-rows div { display: flex; justify-content: space-between; gap: 8px; }
+.path-rows b { font-variant-numeric: tabular-nums; }
+.hero-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 420px; }
+.hero-btns .btn { font-size: 17px; padding: 14px 8px; }
+.btn.dim { background: rgba(255,255,255,.35); color: rgba(27,23,54,.7); }
+.lvbtn.passed small { color: var(--ok); }
+.lvbtn.on.passed small { color: #0b7a4f; }
+.linkbtn { font-size: 14px; font-weight: 800; text-decoration: underline; opacity: .85; padding: 4px; }
+.hero .swipe { font-size: 28px; }
+
+/* ---------- overlays ---------- */
+.lib { position: fixed; inset: 0; z-index: 40; background: rgba(8,5,20,.7); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+  display: grid; place-items: end center; animation: fade-in .2s; }
+.lib-in { width: 100%; max-width: 560px; max-height: 88%; overflow-y: auto; background: #1d1640; border-radius: 26px 26px 0 0;
+  padding: 18px 20px calc(24px + var(--safe-b)); display: flex; flex-direction: column; gap: 10px; animation: sheet .35s cubic-bezier(.2,.9,.3,1.1); }
+.lib-top { display: flex; justify-content: space-between; align-items: center; font-size: 22px; }
+.lib-lv { margin-top: 8px; font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em; color: #c4b5fd; display: flex; justify-content: space-between; }
+.lib-item { display: flex; align-items: center; gap: 12px; padding: 13px 14px; border-radius: 14px; background: rgba(255,255,255,.08); font-size: 17px; font-weight: 800; text-align: left; }
+.lib-item span { font-size: 22px; }
+.lib-item i { margin-left: auto; color: var(--ok); font-style: normal; font-weight: 900; }
+.lib-p { margin: 0; font-size: 15.5px; line-height: 1.5; color: #ddd6fe; }
+.lib textarea { width: 100%; min-height: 76px; border-radius: 12px; border: 2px solid rgba(255,255,255,.2); background: #120c2b; color: #fff; padding: 10px; font: 13px ui-monospace, Consolas, monospace; word-break: break-all; resize: vertical; }
+.lib-msg { min-height: 1.4em; font-weight: 800; color: var(--gold); }
+.btn:focus-visible, .lib-item:focus-visible, .lvbtn:focus-visible, .linkbtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
+@keyframes fade-in { from { opacity: 0; } }

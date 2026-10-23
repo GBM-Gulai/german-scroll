@@ -176,5 +176,79 @@ pack("B1", {
       qs: [["Ab wann muss es im Haus ruhig sein?", ["Ab 22 Uhr", "Ab 20 Uhr", "Ab 6 Uhr"]],
            ["Was darf man auf dem Balkon nicht machen?", ["Grillen", "Wäsche trocknen", "Blumen pflanzen"]],
            ["Wem muss man Schäden melden?", ["Der Hausverwaltung", "Der Polizei", "Den Nachbarn"]]] }
+  ],
+
+  lessons: [
+    { e: "✨", t: "Konjunktiv II",
+      slides: [
+        { h: "Unreal, polite, wishful", p: "Use Konjunktiv II for <b>wishes</b>, <b>unreal situations</b>, <b>advice</b> and <b>polite requests</b>.",
+          ex: ["Ich hätte gern einen Kaffee.", "Könnten Sie mir helfen?", "An deiner Stelle würde ich warten."] },
+        { h: "Forms", p: "Most verbs simply use <b>würde + infinitive</b>.",
+          table: { head: ["", "werden", "haben", "sein", "können"], rows: [["ich", "würde", "hätte", "wäre", "könnte"], ["du", "würdest", "hättest", "wärst", "könntest"],
+            ["er / sie", "würde", "hätte", "wäre", "könnte"], ["wir", "würden", "hätten", "wären", "könnten"]] } },
+        { h: "Unreal conditions", p: "<b>Wenn</b> + Konjunktiv II, then Konjunktiv II in the main clause.",
+          ex: ["Wenn ich mehr Geld hätte, würde ich reisen.", "Wenn ich du wäre, würde ich das nicht machen."] }
+      ],
+      quiz: [["Wenn ich Zeit ___, würde ich mitkommen.", ["hätte", "habe", "hatte"]], ["___ Sie bitte das Fenster schließen? (polite)", ["Könnten", "Können", "Konnten"]]] },
+
+    { e: "🔗", t: "Relative clauses",
+      slides: [
+        { h: "Describing a noun", p: "A relative clause gives extra information about a noun. A relative pronoun starts it, the verb goes to the <b>end</b>, and commas go around it.",
+          ex: ["Der Mann, der neben mir wohnt, ist Arzt."] },
+        { h: "Gender from the noun, case from the clause", table: { head: ["", "masc.", "fem.", "neut.", "plural"], rows: [
+          ["Nominativ", "der", "die", "das", "die"], ["Akkusativ", "<b>den</b>", "die", "das", "die"], ["Dativ", "<b>dem</b>", "<b>der</b>", "<b>dem</b>", "<b>denen</b>"]] } },
+        { h: "Examples", ex: ["Das ist der Film, den ich gestern gesehen habe.", "Die Kollegin, der ich geholfen habe, ist nett.", "Die Stadt, in der ich wohne, ist schön."] }
+      ],
+      quiz: [["Der Bus, ___ jetzt kommt, fährt zum Bahnhof.", ["der", "den", "dem"]], ["Die Leute, mit ___ ich arbeite, sind nett.", ["denen", "den", "die"]]] },
+
+    { e: "🏗️", t: "The passive",
+      slides: [
+        { h: "Focus on the action", p: "Use the passive when <b>what happens</b> matters more than who does it: <b>werden + Partizip II</b>.",
+          ex: ["Hier wird ein neues Haus gebaut.", "Die Briefe werden jeden Tag gebracht."] },
+        { h: "Tenses", table: { head: ["Tense", "Form", "Example"], rows: [["Präsens", "wird + Partizip", "Das Auto wird repariert."],
+          ["Präteritum", "wurde + Partizip", "Das Auto wurde repariert."], ["Perfekt", "ist + Partizip + worden", "Das Auto ist repariert worden."],
+          ["with a modal", "Partizip + werden", "Das Auto muss repariert werden."]] } },
+        { h: "Who did it?", p: "To name the doer, use <b>von</b> + Dativ.", ex: ["Das Gesetz wurde vom Parlament beschlossen."] }
+      ],
+      quiz: [["Die Straße ___ gerade repariert.", ["wird", "ist", "hat"]], ["Das Formular muss heute ausgefüllt ___.", ["werden", "wird", "worden"]]] },
+
+    { e: "🎨", t: "Adjective endings",
+      slides: [
+        { h: "The big idea", p: "If the article already shows gender and case clearly, the adjective only takes <b>-e</b> or <b>-en</b>. If it doesn't (ein, or no article), the adjective shows it.",
+          ex: ["der neue Kollege → ein neuer Kollege", "das kleine Kind → ein kleines Kind"] },
+        { h: "After der / die / das", table: { head: ["", "masc.", "fem.", "neut.", "plural"], rows: [["Nom.", "-e", "-e", "-e", "-en"], ["Akk.", "<b>-en</b>", "-e", "-e", "-en"], ["Dat.", "-en", "-en", "-en", "-en"]] } },
+        { h: "After ein / kein / mein", table: { head: ["", "masc.", "fem.", "neut.", "plural (keine)"], rows: [["Nom.", "<b>-er</b>", "-e", "<b>-es</b>", "-en"], ["Akk.", "-en", "-e", "<b>-es</b>", "-en"], ["Dat.", "-en", "-en", "-en", "-en"]] } },
+        { h: "Shortcut", p: "<b>Dativ and plural → almost always -en.</b> When you're unsure, that's the safest guess." }
+      ],
+      quiz: [["Ich habe einen ___ Laptop. (neu)", ["neuen", "neuer", "neues"]], ["Das ist ein ___ Haus. (schön)", ["schönes", "schöne", "schönen"]], ["mit den ___ Freunden (alt)", ["alten", "alte", "alter"]]] },
+
+    { e: "🎯", t: "zu, um … zu, damit",
+      slides: [
+        { h: "Infinitive with zu", p: "After many expressions the second verb comes with <b>zu</b> at the end: Lust haben, vergessen, versuchen, anfangen, es ist wichtig …",
+          ex: ["Ich habe keine Lust, heute zu kochen.", "Vergiss nicht, die Miete zu zahlen!", "Ich versuche, jeden Tag zu üben."] },
+        { h: "Separable verbs", p: "<b>zu</b> goes between the prefix and the verb.", ex: ["Es ist schwer, früh aufzustehen.", "Ich habe vergessen, dich anzurufen."] },
+        { h: "Purpose: um … zu or damit", table: { head: ["Same subject → um … zu", "Different subjects → damit"], rows: [["Ich lerne, um die Prüfung zu bestehen.", "Ich spreche langsam, damit du mich verstehst."]] } }
+      ],
+      quiz: [["Ich habe vergessen, den Müll ___.", ["rauszubringen", "zu rausbringen", "rausbringen"]], ["Er spart, ___ seine Kinder studieren können.", ["damit", "um", "zu"]]] },
+
+    { e: "🧷", t: "The Genitiv",
+      slides: [
+        { h: "Whose is it?", p: "The Genitiv shows possession: <b>des</b> (masc./neut., noun + -s/-es) and <b>der</b> (fem./plural). With names just add <b>-s</b>.",
+          ex: ["das Auto des Nachbarn", "die Tasche der Lehrerin", "Annas Wohnung"] },
+        { h: "Genitiv prepositions", p: "<b>wegen, trotz, während, statt, innerhalb</b> – mostly in written German.",
+          ex: ["Wegen des Regens bleiben wir zu Hause.", "Trotz der Kälte gehen wir spazieren."] },
+        { h: "Spoken Austrian German", p: "In everyday speech the Genitiv is often replaced with <b>von + Dativ</b>, or Dativ after wegen.",
+          ex: ["das Auto von meinem Nachbarn", "wegen dem Regen (colloquial)"] }
+      ],
+      quiz: [["Das ist das Büro ___ Chefs.", ["des", "dem", "der"]], ["___ des Staus bin ich zu spät gekommen.", ["Wegen", "Mit", "Seit"]]] },
+
+    { e: "🧲", t: "Verbs with prepositions",
+      slides: [
+        { h: "Learn them as a pair", table: { head: ["Verb", "Preposition + case"], rows: [["warten", "auf + Akk"], ["sich freuen", "auf + Akk (future) · über + Akk (now)"],
+          ["denken", "an + Akk"], ["sich interessieren", "für + Akk"], ["sich ärgern", "über + Akk"], ["Angst haben", "vor + Dat"], ["teilnehmen", "an + Dat"]] } },
+        { h: "da- and wo- for things", p: "For things (not people) replace preposition + pronoun with <b>da(r)-</b> + preposition. Ask with <b>wo(r)-</b> + preposition.",
+          ex: ["Ich warte auf den Bus. → Ich warte darauf.", "Worauf wartest du?", "Ich denke an meine Mutter. → Ich denke an sie."] }
+      ],
+      quiz: [["___ freust du dich? – Auf den Urlaub.", ["Worauf", "Wofür", "Woran"]], ["Hast du an den Termin gedacht? – Ja, ich habe ___ gedacht.", ["daran", "darauf", "an ihn"]]] }
   ]
 });

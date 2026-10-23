@@ -27,7 +27,8 @@ const OOPS = ["Fast!", "Nicht ganz…", "Hoppla!", "Knapp daneben!", "Macht nix!
 const NOUNS = NOUN_DATA.map((l, i) => { const [a, w, en, e = ""] = l.split("|"); return { a, w, en, e, i }; });
 
 // ---------- saved progress ----------
-const S = Object.assign({ xp: 0, best: 0, wrong: [], mute: false, level: 2 },
+// prog: correct answers per level · learned: finished lessons (by title) · passed: level tests passed
+const S = Object.assign({ xp: 0, best: 0, wrong: [], mute: false, level: 2, prog: {}, learned: {}, passed: {}, notified: {} },
   (() => { try { return JSON.parse(localStorage.getItem("gscroll")) || {}; } catch { return {}; } })());
 const save = () => { try { localStorage.setItem("gscroll", JSON.stringify(S)); } catch {} };
 let streak = 0;
@@ -127,6 +128,7 @@ function score(ok, el, { id, pts = 10 } = {}) {
     streak++;
     const mult = streak >= 10 ? 3 : streak >= 5 ? 2 : 1;
     S.xp += pts * mult;
+    S.prog[S.level] = (S.prog[S.level] || 0) + 1;
     floatText(x, y - 30, `+${pts * mult}${mult > 1 ? " ×" + mult : ""}`);
     confetti(x, y, 22); sfx("ok"); buzz(15);
     if (id) S.wrong = S.wrong.filter(w => w !== id);
@@ -138,21 +140,27 @@ function score(ok, el, { id, pts = 10 } = {}) {
   S.best = Math.max(S.best, streak);
   save(); hud(ok);
 }
-function level(xp) { let l = 1, need = 100; while (xp >= need) { xp -= need; l++; need += 50; } return { l, p: xp / need }; }
-let shownLevel = level(S.xp).l;
+// Level progress: 40 % lessons + 40 % correct answers + 20 % level test. The test unlocks at 60 %.
+const PRACTICE_GOAL = 150, TEST_UNLOCK = 60, TEST_QUESTIONS = 10, TEST_PASS = 8;
+function mastery(l) {
+  const ls = LESSONS.filter((L, k) => LV.lessons[k] === l), done = ls.filter(L => S.learned[L.t]).length;
+  const lessons = ls.length ? done / ls.length : 1, correct = S.prog[l] || 0, practice = Math.min(1, correct / PRACTICE_GOAL);
+  const base = lessons * 40 + practice * 40;
+  return { done, total: ls.length, correct, passed: !!S.passed[l], unlocked: base >= TEST_UNLOCK, pct: Math.round(base + (S.passed[l] ? 20 : 0)) };
+}
+function celebrate(small, big) {
+  const e = h("div", "levelup", `<div><small>${small}</small><b>${big}</b></div>`);
+  document.body.append(e); setTimeout(() => e.remove(), 2600);
+  setTimeout(() => sfx("win"), 300); confetti(innerWidth / 2, innerHeight / 2, 220);
+}
 function hud(pulse) {
   $("#streak b").textContent = streak;
   $("#xp b").textContent = S.xp;
-  const L = level(S.xp);
-  $("#lvl").textContent = `${LEVELS[S.level - 1]} · Lv ${L.l}`;
-  $("#level i").style.width = L.p * 100 + "%";
+  const M = mastery(S.level);
+  $("#lvl").textContent = `${LEVELS[S.level - 1]} · ${M.pct}%`;
+  $("#level i").style.width = M.pct + "%";
   if (pulse) { const s = $("#streak"); s.classList.remove("pop"); void s.offsetWidth; s.classList.add("pop"); }
-  if (L.l > shownLevel) {
-    shownLevel = L.l;
-    const e = h("div", "levelup", `<div><small>Level up!</small><b>${L.l}</b></div>`);
-    document.body.append(e); setTimeout(() => e.remove(), 2300);
-    setTimeout(() => sfx("win"), 300); confetti(innerWidth / 2, innerHeight / 2, 200);
-  }
+  if (M.unlocked && !M.passed && !S.notified[S.level]) { S.notified[S.level] = 1; save(); celebrate("Level-Test freigeschaltet", "🎓"); }
 }
 $("#mute").textContent = S.mute ? "🔇" : "🔊";
 $("#mute").onclick = () => { S.mute = !S.mute; save(); $("#mute").textContent = S.mute ? "🔇" : "🔊"; };
@@ -452,8 +460,10 @@ function numberRound() {
   const mode = rnd(["read", "read", "listen", "listen", "math", "price"]);
   if (mode === "price") {
     const e = between(1, 29), c = rnd([0, 5, 10, 20, 49, 50, 90, 95, 99, between(11, 89)]);
-    const wrong = [[e + 1, c], [e, (c + 10) % 100], [Math.floor(c / 10) || e + 2, e % 100]].filter(([x, y]) => !(x === e && y === c));
-    const opts = shuffle([[e, c], ...sample(wrong, 2)].map(([x, y]) => euro(x, y)));
+    const right = euro(e, c);
+    const wrong = [...new Set([[e + 1, c], [e, (c + 10) % 100], [Math.floor(c / 10) || e + 2, e % 100], [e + 2, c], [e, (c + 1) % 100]]
+      .map(([x, y]) => euro(x, y)))].filter(w => w !== right);
+    const opts = shuffle([right, ...sample(wrong, 2)]);
     return { q: `<div class="emoji-md">🏷️</div><div class="clock">${euroStr(e, c)}</div>`, opts, ans: opts.indexOf(euro(e, c)),
              reveal: `${euroStr(e, c)} = <b>${euro(e, c)}</b>` };
   }
@@ -665,24 +675,175 @@ G.read = k => {
   return c;
 };
 
-function hero() {
-  const c = h("section", "card t-hero");
-  c.innerHTML = `<div class="inner hero">
-    <div class="logo">German<br>Scroll<span>🇦🇹</span></div>
-    <p class="slogan">Doomscrolling – aber du lernst Deutsch.</p>
-    <div class="floaties">${["⚡", "🎧", "🧩", "🧱", "📖", "💡", "🔤", "🥊"].map((e, i) => `<span style="--i:${i}">${e}</span>`).join("")}</div>
-    <div class="levels">${LEVELS.map((l, i) => `<button class="lvbtn${S.level === i + 1 ? " on" : ""}" data-lv="${i + 1}">${l}<small>${LEVEL_NAMES[i]}</small></button>`).join("")}</div>
-    <div class="stats"><div><b>${S.xp}</b>XP</div><div><b>${S.best}</b>Beste Serie</div><div><b>${S.wrong.length}</b>Zum Üben</div></div>
-    <div class="swipe">☝️<span>Swipe up</span></div></div>`;
-  c.querySelectorAll(".lvbtn").forEach(b => b.onclick = () => {
-    c.querySelectorAll(".lvbtn").forEach(x => x.classList.toggle("on", x === b));
-    setLevel(+b.dataset.lv);
-  });
+// ---------- lessons: short story-style explanations + a mini quiz ----------
+function table(t) {
+  return `<div class="l-tablewrap"><table class="l-table"><tr>${t.head.map(x => `<th>${x}</th>`).join("")}</tr>` +
+    t.rows.map(r => `<tr>${r.map(x => `<td>${x}</td>`).join("")}</tr>`).join("") + "</table></div>";
+}
+G.lesson = k => {
+  const L = LESSONS[k], c = card("lesson", `📚 Lektion · ${LEVELS[LV.lessons[k] - 1]}`);
+  const segs = h("div", "segs", L.slides.map(() => "<i></i>").join("") + "<i></i>"), stage = h("div", "l-stage");
+  const nav = h("div", "l-nav"), back = h("button", "btn l-back", "←"), next = h("button", "btn start l-next");
+  nav.append(back, next);
+  c.body.append(h("div", "l-title", `${L.e} ${L.t}`), segs, stage, nav);
+  let i = 0;
+  function show() {
+    const s = L.slides[i];
+    stage.innerHTML = `<div class="l-h">${s.h}</div>${s.p ? `<div class="l-p">${s.p}</div>` : ""}${s.table ? table(s.table) : ""}` +
+      (s.ex || []).map(x => `<div class="g-ex"><span>${x}</span>${say(x.split(" – ")[0].replace(/→/g, ","))}</div>`).join("");
+    stage.classList.remove("pop"); void stage.offsetWidth; stage.classList.add("pop");
+    [...segs.children].forEach((g, j) => g.classList.toggle("on", j <= i));
+    back.disabled = i === 0;
+    next.textContent = i === L.slides.length - 1 ? "🎯 Kurzer Test" : "Weiter →";
+    c.body.scrollTo({ top: 0 });
+  }
+  back.onclick = () => { if (i > 0) { i--; show(); } };
+  next.onclick = () => { sfx("tap"); if (i < L.slides.length - 1) { i++; show(); } else quiz(); };
+  function quiz() {
+    nav.remove(); segs.lastChild.classList.add("on"); stage.innerHTML = "";
+    let qi = 0, right = 0;
+    const ask = () => {
+      const [q, o] = L.quiz[qi], opts = shuffle(o), wrap = h("div", "qwrap", `<div class="q">${qi + 1}/${L.quiz.length} · ${q}</div>`);
+      wrap.append(choices(opts, opts.indexOf(o[0]), (ok, b) => {
+        score(ok, b, { pts: 10 }); if (ok) right++;
+        setTimeout(() => {
+          wrap.remove();
+          if (++qi < L.quiz.length) return ask();
+          S.learned[L.t] = 1; save(); hud(); refreshHero();
+          done(c, right === L.quiz.length, `Lektion „${L.t}“ geschafft 🎓 <b>${right}/${L.quiz.length}</b> richtig`);
+        }, 1000);
+      }));
+      stage.append(wrap);
+    };
+    ask();
+  }
+  show();
   return c;
+};
+
+// ---------- level test: pass it to move up a level ----------
+function testPool(l) {
+  const qs = [];
+  GAPS.forEach((g, i) => { if (LV.gaps[i] === l) qs.push([g[0].replace("___", "<span class='blank'>?</span>"), g[1]]); });
+  LESSONS.forEach((L, i) => { if (LV.lessons[i] === l) qs.push(...L.quiz); });
+  GRAMMAR.forEach((g, i) => { if (LV.grammar[i] === l) qs.push([g.q, g.o]); });
+  return qs;
+}
+G.pruefung = () => {
+  const l = S.level, c = card("pruefung", `🎓 Level-Test · ${LEVELS[l - 1]}`), qs = sample(testPool(l), TEST_QUESTIONS);
+  const goal = l < 3 ? `Bereit für ${LEVELS[l]}?` : "B1 abschließen?";
+  c.body.append(h("div", "g-emoji", "🎓"), h("div", "g-title", goal),
+    h("div", "intro", `${qs.length} Fragen aus Grammatik & Lektionen.<br>Du brauchst <b>${TEST_PASS} richtige</b>.`));
+  const go = h("button", "btn start", "Test starten");
+  c.body.append(go);
+  let qi = 0, right = 0;
+  go.onclick = () => { [...c.body.children].slice(1).forEach(x => x.remove()); ask(); };
+  function ask() {
+    const [q, o] = qs[qi], opts = shuffle(o), wrap = h("div", "qwrap", `<div class="rmeta">Frage ${qi + 1} / ${qs.length} · ✅ ${right}</div><div class="q">${q}</div>`);
+    wrap.append(choices(opts, opts.indexOf(o[0]), (ok, b) => {
+      score(ok, b, { pts: 10 }); if (ok) right++;
+      setTimeout(() => { wrap.remove(); if (++qi < qs.length) ask(); else finish(); }, 900);
+    }));
+    c.body.append(wrap);
+  }
+  function finish() {
+    const ok = right >= TEST_PASS;
+    if (ok) {
+      S.passed[l] = 1;
+      if (l < 3) S.level = l + 1;   // new cards come from the next level from now on
+      save(); hud(); refreshHero();
+      celebrate(l < 3 ? "Du bist jetzt" : "Geschafft!", l < 3 ? LEVELS[l] : "B1 🏆");
+    }
+    done(c, ok, ok ? (l < 3 ? `<b>${right}/${qs.length}</b> – bestanden! Ab jetzt spielst du auf <b>${LEVELS[l]}</b> 🎉` : `<b>${right}/${qs.length}</b> – B1 bestanden! 🏆`)
+                   : `<b>${right}/${qs.length}</b> – du brauchst ${TEST_PASS}. Mach noch ein paar Lektionen und versuch es nochmal!`);
+  }
+  return c;
+};
+
+// ---------- overlays: lesson library and progress backup ----------
+function overlay(html, onClick) {
+  const ov = h("div", "lib", `<div class="lib-in">${html}</div>`);
+  ov.onclick = e => { if (e.target === ov || e.target.closest(".lib-x")) return ov.remove(); onClick(e, ov); };
+  document.body.append(ov);
+  return ov;
+}
+function library() {
+  overlay(`<div class="lib-top"><b>📚 Lektionen</b><button class="pill lib-x" aria-label="Schließen">✕</button></div>` +
+    LEVELS.map((lv, li) => `<div class="lib-lv">${lv} · ${LEVEL_NAMES[li]} <span>${mastery(li + 1).done}/${mastery(li + 1).total}</span></div>` +
+      LESSONS.map((L, k) => LV.lessons[k] === li + 1 ? `<button class="lib-item" data-k="${k}"><span>${L.e}</span>${L.t}${S.learned[L.t] ? "<i>✓</i>" : ""}</button>` : "").join("")).join(""),
+    (e, ov) => { const it = e.target.closest(".lib-item"); if (it) { ov.remove(); openCard(G.lesson(+it.dataset.k)); } });
+}
+function backup() {
+  const code = btoa(unescape(encodeURIComponent(JSON.stringify(S))));
+  const ov = overlay(`<div class="lib-top"><b>💾 Your progress</b><button class="pill lib-x" aria-label="Close">✕</button></div>
+    <p class="lib-p">Your progress is saved automatically on this device. To move it to another phone or browser, copy this code and paste it there.</p>
+    <textarea id="bk-out" readonly>${code}</textarea>
+    <button class="btn start" data-act="copy">Copy code</button>
+    <div class="lib-lv">Paste a code from another device</div>
+    <textarea id="bk-in" placeholder="Paste code here"></textarea>
+    <button class="btn" data-act="load">Load progress</button>
+    <div class="lib-msg" role="status"></div>`, (e, ov) => {
+    const act = e.target.closest("[data-act]")?.dataset.act, msg = t => { $(".lib-msg", ov).textContent = t; };
+    if (act === "copy") navigator.clipboard.writeText(code).then(() => msg("Copied ✓"), () => { $("#bk-out", ov).select(); msg("Selected – now copy it"); });
+    if (act === "load") {
+      try {
+        const d = JSON.parse(decodeURIComponent(escape(atob($("#bk-in", ov).value.trim()))));
+        if (typeof d.xp !== "number") throw new Error();
+        Object.assign(S, d); save(); location.reload();
+      } catch { msg("That code doesn't work – make sure you copied all of it."); }
+    }
+  });
+  $("#bk-out", ov).onclick = e => e.target.select();
+}
+function openCard(c) {   // insert a card right after the one on screen and scroll to it
+  const idx = Math.min(feed.children.length - 1, Math.round(feed.scrollTop / feed.clientHeight));
+  feed.children[idx].after(c); io.observe(c);
+  feed.scrollTo({ top: (idx + 1) * feed.clientHeight, behavior: "smooth" });
+}
+
+function hero() {
+  const c = h("section", "card t-hero"), M = mastery(S.level), nextLv = LEVELS[S.level];
+  const title = M.passed ? `${LEVELS[S.level - 1]} geschafft! 🏆` : nextLv ? `Dein Weg zu ${nextLv}` : "Dein Weg durch B1";
+  c.innerHTML = `<div class="inner hero">
+    <div class="logo">German Scroll <span>🇦🇹</span></div>
+    <p class="slogan">Doomscrolling – aber du lernst Deutsch.</p>
+    <div class="levels">${LEVELS.map((l, i) => `<button class="lvbtn${S.level === i + 1 ? " on" : ""}${S.passed[i + 1] ? " passed" : ""}" data-lv="${i + 1}">${l}<small>${S.passed[i + 1] ? "✓ bestanden" : LEVEL_NAMES[i]}</small></button>`).join("")}</div>
+    <div class="path">
+      <div class="path-h">${title}<b>${M.pct}%</b></div>
+      <div class="bar big"><i style="width:${M.pct}%"></i></div>
+      <div class="path-rows">
+        <div>📚 Lektionen <b>${M.done} / ${M.total}</b></div>
+        <div>🎯 Richtige Antworten <b>${Math.min(M.correct, PRACTICE_GOAL)} / ${PRACTICE_GOAL}</b></div>
+        <div>🎓 Level-Test <b>${M.passed ? "bestanden ✓" : M.unlocked ? "bereit!" : `ab ${TEST_UNLOCK} %`}</b></div>
+      </div>
+    </div>
+    <div class="hero-btns">
+      <button class="btn start" data-act="lib">📚 Lektionen</button>
+      <button class="btn start${M.unlocked ? "" : " dim"}" data-act="test">🎓 Level-Test</button>
+    </div>
+    <div class="stats"><div><b>${S.xp}</b>XP</div><div><b>${S.best}</b>Beste Serie</div><div><b>${S.wrong.length}</b>Zum Üben</div></div>
+    <button class="linkbtn" data-act="backup">💾 Fortschritt sichern / übertragen</button>
+    <div class="swipe">☝️<span>Swipe up</span></div></div>`;
+  c.onclick = e => {
+    const lv = e.target.closest(".lvbtn"), act = e.target.closest("[data-act]")?.dataset.act;
+    if (lv) return setLevel(+lv.dataset.lv);
+    if (act === "lib") library();
+    if (act === "backup") backup();
+    if (act === "test") {
+      if (mastery(S.level).unlocked) openCard(G.pruefung());
+      else floatText(...center(e.target), `Noch gesperrt – ab ${TEST_UNLOCK} %`);
+    }
+  };
+  return c;
+}
+function refreshHero() {
+  const old = feed.firstChild, fresh = hero();
+  io.unobserve(old); old.replaceWith(fresh); fresh.classList.add("seen"); io.observe(fresh);
 }
 function setLevel(l) {
   S.level = l; save(); hud(); sfx("win");
   [...feed.children].slice(1).forEach(c => { io.unobserve(c); c.remove(); });   // rebuild the feed below the start card
+  refreshHero();
   lastType = ""; recent.length = 0;
   more(5);
 }
@@ -691,12 +852,18 @@ function setLevel(l) {
 const WEIGHTS = {
   artikel: 2, emoji: 2, listen: 2, pairs: 1.5, builder: 1.2, tf: 1.2, scramble: 1.5, odd: 1, grammar: 1.2, read: 1.2, verb: 1.5, gap: 1.2,
   // generated – endless variety
-  satz: 3, genbuild: 1.5, zahlen: 1.3, uhr: 1.2, gegenteil: 1.2, kalender: .8, perfekt: 1.8, wechsel: 1.4, adjektiv: 1.8
+  satz: 3, genbuild: 1.5, zahlen: 1.3, uhr: 1.2, gegenteil: 1.2, kalender: .8, perfekt: 1.8, wechsel: 1.4, adjektiv: 1.8,
+  lesson: 1.4, pruefung: .6
 };
 const TYPE_LEVEL = { perfekt: 2, wechsel: 2, adjektiv: 3 };   // minimum level for a game type
 const EASY = ["artikel", "emoji", "listen", "pairs", "scramble", "kalender"];   // shown less often at B1
-const typeWeight = t => (TYPE_LEVEL[t] || 1) > S.level ? 0 : WEIGHTS[t] * (S.level === 3 && EASY.includes(t) ? .4 : 1);
+function typeWeight(t) {
+  if ((TYPE_LEVEL[t] || 1) > S.level) return 0;
+  if (t === "pruefung") { const M = mastery(S.level); return M.unlocked && !M.passed ? WEIGHTS[t] : 0; }
+  return WEIGHTS[t] * (S.level === 3 && EASY.includes(t) ? .4 : 1);
+}
 const POOL = {
+  lesson: () => { const i = pickIdx("lessons", k => !S.learned[LESSONS[k].t]); return i === undefined ? pickIdx("lessons") : i; },
   emoji: () => pickIdx("nouns", i => NOUNS[i].e), listen: () => pickIdx("nouns", i => NOUNS[i].e),
   scramble: () => pickIdx("nouns", i => NOUNS[i].w.length >= 3 && NOUNS[i].w.length <= 9),
   builder: () => pickIdx("build"), odd: () => pickIdx("odd"), gap: () => pickIdx("gaps"),
@@ -750,3 +917,5 @@ if ("speechSynthesis" in window) speechSynthesis.getVoices();
 // Installable app + offline mode when served from a real website (not from a local file)
 if ("serviceWorker" in navigator && location.protocol === "https:" && !window.STANDALONE_BUNDLE)
   navigator.serviceWorker.register("sw.js").catch(() => {});
+// Ask the browser not to clear saved progress when the phone runs low on space
+if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
