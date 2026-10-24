@@ -1,7 +1,7 @@
 /* Offline support: serve the app from cache, refresh the cache in the background.
    Bump VERSION when you want every phone to fetch fresh files immediately. */
-const VERSION = "gs-3";
-const FILES = ["./", "index.html", "style.css", "app.js", "content.js", "content/a1.js", "content/a2.js", "content/b1.js",
+const VERSION = "gs-4";
+const FILES = ["./", "index.html", "style.css", "app.js", "content.js", "content/a1.js", "content/a2.js", "content/b1.js", "content/b2.js", "content/c1.js", "content/c2.js",
   "manifest.webmanifest", "icon.svg"];
 
 self.addEventListener("install", e => { e.waitUntil(caches.open(VERSION).then(c => c.addAll(FILES))); self.skipWaiting(); });

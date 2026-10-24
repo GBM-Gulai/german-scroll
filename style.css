@@ -115,8 +115,8 @@ button { font: inherit; color: inherit; cursor: pointer; border: 0; background: 
 .slogan { margin: 0; font-size: 20px; font-weight: 800; max-width: 20em; }
 .floaties { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; font-size: 34px; }
 .floaties span { animation: bob 2.4s ease-in-out infinite; animation-delay: calc(var(--i) * -.3s); }
-.levels { display: flex; gap: 10px; justify-content: center; }
-.lvbtn { min-width: 86px; padding: 10px 14px; border-radius: 16px; background: rgba(255,255,255,.15); font-size: 24px; font-weight: 900; line-height: 1.1; box-shadow: 0 4px 0 rgba(0,0,0,.2); }
+.levels { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; width: 100%; max-width: 420px; }
+.lvbtn { min-width: 0; padding: 8px 6px; border-radius: 16px; background: rgba(255,255,255,.15); font-size: 24px; font-weight: 900; line-height: 1.1; box-shadow: 0 4px 0 rgba(0,0,0,.2); }
 .lvbtn small { display: block; font-size: 11px; font-weight: 800; opacity: .85; text-transform: uppercase; letter-spacing: .04em; }
 .lvbtn.on { background: #fff; color: var(--ink); animation: pop .35s; }
 #level { cursor: pointer; }
@@ -279,3 +279,6 @@ mark { background: #facc15; color: #1a1300; border-radius: 5px; padding: 0 4px; 
 /* long words (e.g. German numbers) must never run off a phone screen */
 .btn, .rword, .sentence, .q, .reveal, .fb { overflow-wrap: anywhere; }
 .rword.num { font-size: clamp(24px, 7.5vw, 34px); line-height: 1.25; }
+
+.t-idiom { background: linear-gradient(165deg, #831843, #6d28d9 55%, #1e40af); }
+.lvbtn small { overflow-wrap: anywhere; }

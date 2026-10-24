@@ -727,6 +727,18 @@ G.lesson = k => {
   return c;
 };
 
+// ---------- B2+: idioms ----------
+G.idiom = k => {
+  const [de, right, w1, w2, lit] = IDIOMS[k], c = card("idiom", "🎭 Redewendung"), opts = shuffle([right, w1, w2]);
+  c.body.append(h("div", "g-emoji", "🎭"), h("div", "sentence", `„${de}“`), h("div", "intro", `<i>literally: ${lit}</i> ${say(de)}`),
+    h("div", "q", "What does it really mean?"),
+    choices(opts, opts.indexOf(right), (ok, b) => {
+      score(ok, b, { id: "idiom:" + k, pts: 15 });
+      done(c, ok, `<b>${de}</b> = ${right}`);
+    }));
+  return c;
+};
+
 // ---------- level test: pass it to move up a level ----------
 function testPool(l) {
   const qs = [];
@@ -737,7 +749,7 @@ function testPool(l) {
 }
 G.pruefung = () => {
   const l = S.level, c = card("pruefung", `🎓 Level-Test · ${LEVELS[l - 1]}`), qs = sample(testPool(l), TEST_QUESTIONS);
-  const goal = l < 3 ? `Bereit für ${LEVELS[l]}?` : "B1 abschließen?";
+  const goal = l < LEVELS.length ? `Bereit für ${LEVELS[l]}?` : `${LEVELS[l - 1]} abschließen?`;
   c.body.append(h("div", "g-emoji", "🎓"), h("div", "g-title", goal),
     h("div", "intro", `${qs.length} Fragen aus Grammatik & Lektionen.<br>Du brauchst <b>${TEST_PASS} richtige</b>.`));
   const go = h("button", "btn start", "Test starten");
@@ -756,11 +768,11 @@ G.pruefung = () => {
     const ok = right >= TEST_PASS;
     if (ok) {
       S.passed[l] = 1;
-      if (l < 3) S.level = l + 1;   // new cards come from the next level from now on
+      if (l < LEVELS.length) S.level = l + 1;   // new cards come from the next level from now on
       save(); hud(); refreshHero();
-      celebrate(l < 3 ? "Du bist jetzt" : "Geschafft!", l < 3 ? LEVELS[l] : "B1 🏆");
+      celebrate(l < LEVELS.length ? "Du bist jetzt" : "Geschafft!", l < LEVELS.length ? LEVELS[l] : LEVELS[l - 1] + " 🏆");
     }
-    done(c, ok, ok ? (l < 3 ? `<b>${right}/${qs.length}</b> – bestanden! Ab jetzt spielst du auf <b>${LEVELS[l]}</b> 🎉` : `<b>${right}/${qs.length}</b> – B1 bestanden! 🏆`)
+    done(c, ok, ok ? (l < LEVELS.length ? `<b>${right}/${qs.length}</b> – bestanden! Ab jetzt spielst du auf <b>${LEVELS[l]}</b> 🎉` : `<b>${right}/${qs.length}</b> – ${LEVELS[l - 1]} bestanden! Du hast das höchste Niveau erreicht 🏆`)
                    : `<b>${right}/${qs.length}</b> – du brauchst ${TEST_PASS}. Mach noch ein paar Lektionen und versuch es nochmal!`);
   }
   return c;
@@ -809,7 +821,7 @@ function openCard(c) {   // insert a card right after the one on screen and scro
 
 function hero() {
   const c = h("section", "card t-hero"), M = mastery(S.level), nextLv = LEVELS[S.level];
-  const title = M.passed ? `${LEVELS[S.level - 1]} geschafft! 🏆` : nextLv ? `Dein Weg zu ${nextLv}` : "Dein Weg durch B1";
+  const title = M.passed ? `${LEVELS[S.level - 1]} geschafft! 🏆` : nextLv ? `Dein Weg zu ${nextLv}` : `Dein Weg durch ${LEVELS[S.level - 1]}`;
   c.innerHTML = `<div class="inner hero">
     <div class="logo">German Scroll <span>🇦🇹</span></div>
     <p class="slogan">Doomscrolling – aber du lernst Deutsch.</p>
@@ -859,17 +871,23 @@ const WEIGHTS = {
   artikel: 2, emoji: 2, listen: 2, pairs: 1.5, builder: 1.2, tf: 1.2, scramble: 1.5, odd: 1, grammar: 1.2, read: 1.2, verb: 1.5, gap: 1.2,
   // generated – endless variety
   satz: 3, genbuild: 1.5, zahlen: 1.3, uhr: 1.2, gegenteil: 1.2, kalender: .8, perfekt: 1.8, wechsel: 1.4, adjektiv: 1.8,
-  lesson: 1.4, pruefung: .6
+  lesson: 1.4, pruefung: .6, idiom: 1.8
 };
-const TYPE_LEVEL = { perfekt: 2, wechsel: 2, adjektiv: 3 };   // minimum level for a game type
-const EASY = ["artikel", "emoji", "listen", "pairs", "scramble", "kalender"];   // shown less often at B1
+const TYPE_LEVEL = { perfekt: 2, wechsel: 2, adjektiv: 3, idiom: 4 };   // minimum level for a game type
+const EASY = ["artikel", "emoji", "listen", "pairs", "scramble", "kalender"];   // picture/vocab games for beginners
+const BASIC = ["satz", "genbuild", "zahlen", "uhr", "gegenteil", "verb", "tf", "odd"];   // A1–B1 grammar drills
 function typeWeight(t) {
   if ((TYPE_LEVEL[t] || 1) > S.level) return 0;
   if (t === "pruefung") { const M = mastery(S.level); return M.unlocked && !M.passed ? WEIGHTS[t] : 0; }
-  return WEIGHTS[t] * (S.level === 3 && EASY.includes(t) ? .4 : 1);
+  let w = WEIGHTS[t];
+  if (EASY.includes(t)) w *= S.level >= 4 ? .15 : S.level === 3 ? .4 : 1;   // B2+ mostly gets level content instead
+  if (BASIC.includes(t) && S.level >= 4) w *= .35;
+  if (["gap", "grammar", "read", "lesson", "builder"].includes(t) && S.level >= 4) w *= 1.6;
+  return w;
 }
 const POOL = {
   lesson: () => { const i = pickIdx("lessons", k => !S.learned[LESSONS[k].t]); return i === undefined ? pickIdx("lessons") : i; },
+  idiom: () => pickIdx("idioms"),
   emoji: () => pickIdx("nouns", i => NOUNS[i].e), listen: () => pickIdx("nouns", i => NOUNS[i].e),
   scramble: () => pickIdx("nouns", i => NOUNS[i].w.length >= 3 && NOUNS[i].w.length <= 9),
   builder: () => pickIdx("build"), odd: () => pickIdx("odd"), gap: () => pickIdx("gaps"),
