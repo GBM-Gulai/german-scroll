@@ -275,3 +275,7 @@ mark { background: #facc15; color: #1a1300; border-radius: 5px; padding: 0 4px; 
 .lib-msg { min-height: 1.4em; font-weight: 800; color: var(--gold); }
 .btn:focus-visible, .lib-item:focus-visible, .lvbtn:focus-visible, .linkbtn:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
 @keyframes fade-in { from { opacity: 0; } }
+
+/* long words (e.g. German numbers) must never run off a phone screen */
+.btn, .rword, .sentence, .q, .reveal, .fb { overflow-wrap: anywhere; }
+.rword.num { font-size: clamp(24px, 7.5vw, 34px); line-height: 1.25; }

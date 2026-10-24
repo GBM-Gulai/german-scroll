@@ -464,20 +464,22 @@ function numberRound() {
     const wrong = [...new Set([[e + 1, c], [e, (c + 10) % 100], [Math.floor(c / 10) || e + 2, e % 100], [e + 2, c], [e, (c + 1) % 100]]
       .map(([x, y]) => euro(x, y)))].filter(w => w !== right);
     const opts = shuffle([right, ...sample(wrong, 2)]);
-    return { q: `<div class="emoji-md">🏷️</div><div class="clock">${euroStr(e, c)}</div>`, opts, ans: opts.indexOf(euro(e, c)),
-             reveal: `${euroStr(e, c)} = <b>${euro(e, c)}</b>` };
+    return { q: `<div class="emoji-md">🏷️</div><div class="clock">${euroStr(e, c)}</div>`, opts: opts.map(wrapNum), ans: opts.indexOf(right),
+             reveal: `${euroStr(e, c)} = <b>${wrapNum(right)}</b>` };
   }
   if (mode === "math") {
     const a = between(2, 20), b = between(2, 20), plus = Math.random() < .6 || a <= b, res = plus ? a + b : a - b;
     const opts = shuffle([res, ...nearNums(res)].map(num));
     const q = `${num(a)} ${plus ? "plus" : "minus"} ${num(b)}`;
-    return { q: `<div class="rword sm">${q} = ?</div>`, opts, ans: opts.indexOf(num(res)), reveal: `${q} = <b>${num(res)}</b> (${res})` };
+    return { q: `<div class="rword sm">${wrapNum(q)} = ?</div>`, opts: opts.map(wrapNum), ans: opts.indexOf(num(res)), reveal: `${wrapNum(q)} = <b>${wrapNum(num(res))}</b> (${res})` };
   }
   const n = rnd([between(13, 99), between(21, 99), between(100, 999), between(1000, 2030)]);
   const opts = shuffle([n, ...nearNums(n)].map(String)), ans = opts.indexOf(String(n));
-  if (mode === "listen") return { q: `<div class="emoji-md">🎧</div>${say(num(n))}`, speak: String(n), opts, ans, reveal: `<b>${num(n)}</b> = ${n}` };
-  return { q: `<div class="rword sm">${num(n)}</div>`, opts, ans, reveal: `<b>${num(n)}</b> = ${n}` };
+  if (mode === "listen") return { q: `<div class="emoji-md">🎧</div>${say(num(n))}`, speak: String(n), opts, ans, reveal: `<b>${wrapNum(num(n))}</b> = ${n}` };
+  return { q: `<div class="rword num">${wrapNum(num(n))}</div>`, opts, ans, reveal: `<b>${wrapNum(num(n))}</b> = ${n}` };
 }
+// Long number words have no spaces – allow line breaks after tausend / hundert / und so they fit on a phone
+const wrapNum = s => s.replace(/(tausend|hundert|und)(?=\S)/g, "$1<wbr>");
 G.zahlen = () => {
   const c = card("zahlen", "🔢 Zahlen-Blitz");
   rapid(c, "Lesen, hören, rechnen, bezahlen<br><b>6 Runden · 7 Sekunden</b>", Array.from({ length: 6 }, numberRound), 7000, "");
@@ -547,11 +549,15 @@ const enVerb = (base, k) => k !== 2 ? base : base === "have" ? "has" : base.repl
 const AKK = { der: "den", die: "die", das: "das" }, EIN = { der: "einen", die: "eine", das: "ein" };
 const KEIN = { der: "keinen", die: "keine", das: "kein" }, DAT = { der: "dem", die: "der", das: "dem" };
 const POSS = [["mein", "my"], ["dein", "your"], ["sein", "his"], ["ihr", "her"], ["unser", "our"]];
+const OBJS = OBJECTS.map(l => { const [a, w, en, c] = l.split("|"); return { a, w, en, cats: c.split(",") }; });
+const objFor = cats => rnd(OBJS.filter(o => o.cats.some(c => cats.includes(c))));   // an object that fits these kinds
+const OWNABLE = ["thing", "clothes", "animal", "doc", "own"];
 
 G.satz = () => {
-  const n = pickNoun(), [p, k, pen] = rnd(PRONOUNS), [inf, ven] = rnd(OBJ_VERBS), f = forms(inf), en = enNoun(n);
-  const subj = `${cap(pen === "I" ? "I" : pen)} ${enVerb(ven, k)}`;
+  const [p, k, pen] = rnd(PRONOUNS), [inf, ven, vcats] = rnd(OBJ_VERBS), f = forms(inf);
   const mode = rnd(["akk", "ein", "kein", "poss", "conj", "conj", ...(S.level >= 2 ? ["dat", "dat"] : [])]);
+  const n = mode === "kein" ? objFor(OBJ_VERBS.find(v => v[0] === "haben")[2]) : mode === "poss" || mode === "dat" ? objFor(OWNABLE) : objFor(vcats);
+  const en = enNoun(n), subj = `${cap(pen)} ${enVerb(ven, k)}`;
   if (mode === "akk") return gapCard("satz", "🎯 Akkusativ", `${cap(p)} ${f[k]} ___ ${n.w}.`, [AKK[n.a], ...ARTS.filter(a => a !== AKK[n.a])],
     `${subj} the ${en}.`, `${art(n.a)} ${n.w} → Akkusativ: <b>${AKK[n.a]} ${n.w}</b>` + (n.a === "der" ? " (only der changes!)" : " (die & das stay the same)"));
   if (mode === "ein") return gapCard("satz", "🎯 Akkusativ", `${cap(p)} ${f[k]} ___ ${n.w}.`, [EIN[n.a], ...Object.values(EIN).filter(a => a !== EIN[n.a])],
@@ -559,7 +565,7 @@ G.satz = () => {
   if (mode === "kein") {
     const hf = forms("haben");
     return gapCard("satz", "🚫 kein / keine", `${cap(p)} ${hf[k]} ___ ${n.w}.`, [KEIN[n.a], ...Object.values(KEIN).filter(a => a !== KEIN[n.a])],
-      `${cap(pen === "I" ? "I" : pen)} ${enVerb("have", k)} no ${en}.`, `${art(n.a)} ${n.w} → <b>${KEIN[n.a]} ${n.w}</b> (works like ein/eine/einen)`);
+      `${cap(pen)} ${enVerb("have", k)} no ${en}.`, `${art(n.a)} ${n.w} → <b>${KEIN[n.a]} ${n.w}</b> (works like ein/eine/einen)`);
   }
   if (mode === "poss") {
     const [st, pe] = rnd(POSS), right = n.a === "die" ? st + "e" : st;
@@ -575,7 +581,7 @@ G.satz = () => {
 
 // Generated word-order puzzle: time word first → verb stays in position 2
 G.genbuild = () => {
-  const n = pickNoun(), [p, k, pen] = rnd(PRONOUNS), [inf, ven] = rnd(OBJ_VERBS), [t, ten] = rnd(TIME_WORDS), f = forms(inf);
+  const [p, k, pen] = rnd(PRONOUNS), [inf, ven, vcats] = rnd(OBJ_VERBS), n = objFor(vcats), [t, ten] = rnd(TIME_WORDS), f = forms(inf);
   const def = Math.random() < .5, obj = `${def ? AKK[n.a] : EIN[n.a]} ${n.w}`, low = t[0].toLowerCase() + t.slice(1);
   const de = `${t} ${f[k]} ${p} ${obj}.`, alt = `${cap(p)} ${f[k]} ${low} ${obj}.`;
   const en = `${cap(ten)} ${pen} ${enVerb(ven, k)} ${def ? "the " + enNoun(n) : aAn(enNoun(n))}.`;
@@ -614,11 +620,11 @@ const ADJ_END = { nomDef: { der: "e", die: "e", das: "e" }, nomEin: { der: "er",
   akkDef: { der: "en", die: "e", das: "e" }, akkEin: { der: "en", die: "e", das: "es" }, dat: { der: "en", die: "en", das: "en" } };
 const NOM_EIN = { der: "ein", die: "eine", das: "ein" };
 G.adjektiv = () => {
-  const n = pickNoun(), [adj, aen] = rnd(ADJECTIVES), en = enNoun(n), mode = rnd(Object.keys(ADJ_END)), end = ADJ_END[mode][n.a];
+  const [adj, aen, acats] = rnd(ADJECTIVES), n = objFor(acats), en = enNoun(n), mode = rnd(Object.keys(ADJ_END)), end = ADJ_END[mode][n.a];
   const s = { nomDef: `${cap(n.a)} ___ ${n.w} ist hier.`, nomEin: `Das ist ${NOM_EIN[n.a]} ___ ${n.w}.`, akkDef: `Ich sehe ${AKK[n.a]} ___ ${n.w}.`,
-    akkEin: `Ich kaufe ${EIN[n.a]} ___ ${n.w}.`, dat: `Was machst du mit ${DAT[n.a]} ___ ${n.w}?` }[mode];
+    akkEin: `Ich möchte ${EIN[n.a]} ___ ${n.w}.`, dat: `Ich bin zufrieden mit ${DAT[n.a]} ___ ${n.w}.` }[mode];
   const e = { nomDef: `The ${aen} ${en} is here.`, nomEin: `That is ${aAn(aen + " " + en)}.`, akkDef: `I see the ${aen} ${en}.`,
-    akkEin: `I'm buying ${aAn(aen + " " + en)}.`, dat: `What are you doing with the ${aen} ${en}?` }[mode];
+    akkEin: `I'd like ${aAn(aen + " " + en)}.`, dat: `I'm happy with the ${aen} ${en}.` }[mode];
   const why = { nomDef: "after der/die/das (Nominativ) → always <b>-e</b>", nomEin: "after ein (Nominativ) the adjective shows the gender: -er / -e / -es",
     akkDef: "Akkusativ after den/die/das: masculine <b>-en</b>, otherwise <b>-e</b>", akkEin: "Akkusativ after einen/eine/ein: -en / -e / -es",
     dat: "Dativ → always <b>-en</b>" }[mode];

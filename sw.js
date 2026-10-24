@@ -1,6 +1,6 @@
 /* Offline support: serve the app from cache, refresh the cache in the background.
    Bump VERSION when you want every phone to fetch fresh files immediately. */
-const VERSION = "gs-2";
+const VERSION = "gs-3";
 const FILES = ["./", "index.html", "style.css", "app.js", "content.js", "content/a1.js", "content/a2.js", "content/b1.js",
   "manifest.webmanifest", "icon.svg"];
 
