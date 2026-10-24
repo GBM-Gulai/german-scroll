@@ -941,5 +941,10 @@ if ("speechSynthesis" in window) speechSynthesis.getVoices();
 // Installable app + offline mode when served from a real website (not from a local file)
 if ("serviceWorker" in navigator && location.protocol === "https:" && !window.STANDALONE_BUNDLE)
   navigator.serviceWorker.register("sw.js").catch(() => {});
+// When a new version has been installed, reload once so the player sees it straight away
+if ("serviceWorker" in navigator && navigator.serviceWorker.controller) {
+  let reloaded = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => { if (!reloaded) { reloaded = true; location.reload(); } });
+}
 // Ask the browser not to clear saved progress when the phone runs low on space
 if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});
