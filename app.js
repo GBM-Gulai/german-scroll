@@ -457,9 +457,9 @@ const euro = (e, c) => `${e === 1 ? "ein" : num(e)} Euro${c ? " " + num(c) : ""}
 const euroStr = (e, c) => `${e},${String(c).padStart(2, "0")} €`;
 
 function numberRound() {
-  const mode = rnd(["read", "read", "listen", "listen", "math", "price"]);
+  const mode = rnd(["read", "read", "listen", "listen", "price"]);
   if (mode === "price") {
-    const e = between(1, 29), c = rnd([0, 5, 10, 20, 49, 50, 90, 95, 99, between(11, 89)]);
+    const e = between(1, S.level === 1 ? 12 : 29), c = rnd(S.level === 1 ? [0, 50, 90, 99] : [0, 5, 10, 20, 49, 50, 90, 95, 99, between(11, 89)]);
     const right = euro(e, c);
     const wrong = [...new Set([[e + 1, c], [e, (c + 10) % 100], [Math.floor(c / 10) || e + 2, e % 100], [e + 2, c], [e, (c + 1) % 100]]
       .map(([x, y]) => euro(x, y)))].filter(w => w !== right);
@@ -467,13 +467,11 @@ function numberRound() {
     return { q: `<div class="emoji-md">🏷️</div><div class="clock">${euroStr(e, c)}</div>`, opts: opts.map(wrapNum), ans: opts.indexOf(right),
              reveal: `${euroStr(e, c)} = <b>${wrapNum(right)}</b>` };
   }
-  if (mode === "math") {
-    const a = between(2, 20), b = between(2, 20), plus = Math.random() < .6 || a <= b, res = plus ? a + b : a - b;
-    const opts = shuffle([res, ...nearNums(res)].map(num));
-    const q = `${num(a)} ${plus ? "plus" : "minus"} ${num(b)}`;
-    return { q: `<div class="rword sm">${wrapNum(q)} = ?</div>`, opts: opts.map(wrapNum), ans: opts.indexOf(num(res)), reveal: `${wrapNum(q)} = <b>${wrapNum(num(res))}</b> (${res})` };
-  }
-  const n = rnd([between(13, 99), between(21, 99), between(100, 999), between(1000, 2030)]);
+  // numbers grow with the level: A1 0–100, A2 adds hundreds, B1+ adds years
+  const ranges = [between(0, 20), between(13, 99), between(21, 99)];
+  if (S.level >= 2) ranges.push(between(100, 999));
+  if (S.level >= 3) ranges.push(between(1000, 2030));
+  const n = rnd(ranges);
   const opts = shuffle([n, ...nearNums(n)].map(String)), ans = opts.indexOf(String(n));
   if (mode === "listen") return { q: `<div class="emoji-md">🎧</div>${say(num(n))}`, speak: String(n), opts, ans, reveal: `<b>${wrapNum(num(n))}</b> = ${n}` };
   return { q: `<div class="rword num">${wrapNum(num(n))}</div>`, opts, ans, reveal: `<b>${wrapNum(num(n))}</b> = ${n}` };
@@ -482,7 +480,7 @@ function numberRound() {
 const wrapNum = s => s.replace(/(tausend|hundert|und)(?=\S)/g, "$1<wbr>");
 G.zahlen = () => {
   const c = card("zahlen", "🔢 Zahlen-Blitz");
-  rapid(c, "Lesen, hören, rechnen, bezahlen<br><b>6 Runden · 7 Sekunden</b>", Array.from({ length: 6 }, numberRound), 7000, "");
+  rapid(c, "Lesen, hören, bezahlen<br><b>5 Runden · 10 Sekunden</b>", Array.from({ length: 5 }, numberRound), 10000, "");
   return c;
 };
 
@@ -523,6 +521,52 @@ G.gegenteil = () => {
              reveal: `${a} ↔ <b>${b}</b> <i>(${ea} ↔ ${eb})</i>` };
   });
   rapid(c, "Finde das Gegenteil!<br><b>6 Runden · 5 Sekunden</b>", rounds, 5000, "");
+  return c;
+};
+
+// colours: swatch → word, word → swatch, "Welche Farbe hat …?"
+const swatch = hex => `<span class="swatch" style="background:${hex}"></span>`;
+G.farben = () => {
+  const c = card("farben", "🎨 Farben-Blitz");
+  const rounds = Array.from({ length: 6 }, (_, k) => {
+    const mode = k % 3, [w, en, hex] = rnd(COLORS_DE), others = sample(COLORS_DE.filter(x => x[0] !== w), 2);
+    if (mode === 0) {
+      const opts = shuffle([w, ...others.map(o => o[0])]);
+      return { q: `${swatch(hex)}<div class="intro">Welche Farbe ist das?</div>`, opts, ans: opts.indexOf(w), reveal: `${swatch(hex)} = <b>${w}</b> <i>(${en})</i>`, speak: undefined };
+    }
+    if (mode === 1) {
+      const all = shuffle([[w, hex], ...others.map(o => [o[0], o[2]])]);
+      return { q: `<div class="rword">${w}</div>${say(w)}`, opts: all.map(([, x]) => swatch(x)), ans: all.findIndex(([x]) => x === w), reveal: `<b>${w}</b> = ${swatch(hex)} <i>(${en})</i>` };
+    }
+    const [thing, col] = rnd(COLOR_THINGS), wrong = sample(COLORS_DE.filter(x => x[0] !== col), 2).map(x => x[0]), opts = shuffle([col, ...wrong]);
+    return { q: `<div class="rword sm">Welche Farbe hat<br>${thing}?</div>`, opts, ans: opts.indexOf(col), reveal: `${thing} ist <b>${col}</b>.` };
+  });
+  rapid(c, "Farben erkennen und benennen<br><b>6 Runden · 8 Sekunden</b>", rounds, 8000, "");
+  return c;
+};
+// word fields: which group does a word belong to – and which word belongs to a group?
+G.wortfeld = () => {
+  const c = card("wortfeld", "🗂️ Wortfeld-Blitz");
+  const rounds = Array.from({ length: 6 }, (_, k) => {
+    const [name, en, words] = rnd(WORDFIELDS), others = sample(WORDFIELDS.filter(f => f[0] !== name), 2), word = rnd(words);
+    if (k % 2 === 0) {
+      const opts = shuffle([name, ...others.map(f => f[0])]);
+      return { q: `<div class="rword">${word}</div>${say(word)}<div class="intro">Das ist …</div>`, opts, ans: opts.indexOf(name), reveal: `${word} → <b>${name}</b> <i>(${en})</i>` };
+    }
+    const opts = shuffle([word, ...others.map(f => rnd(f[2]))]);
+    return { q: `<div class="rword sm">Was gehört zu<br><u>${name}</u>?</div><div class="intro">${en}</div>`, opts, ans: opts.indexOf(word), reveal: `<b>${word}</b> gehört zu ${name}.` };
+  });
+  rapid(c, "Welches Wort gehört wohin?<br><b>6 Runden · 8 Sekunden</b>", rounds, 8000, "");
+  return c;
+};
+// family riddles
+G.familie = () => {
+  const c = card("familie", "👪 Familien-Rätsel");
+  const rounds = sample(FAMILY, 5).map(([q, right, w1, w2, en]) => {
+    const opts = shuffle([right, w1, w2]);
+    return { q: `<div class="rword sm">${q}</div>`, opts, ans: opts.indexOf(right), reveal: `${q.replace("…", "<b>" + right + "</b>")} <i>(${en})</i>` };
+  });
+  rapid(c, "Wer ist wer in der Familie?<br><b>5 Runden · 10 Sekunden</b>", rounds, 10000, "");
   return c;
 };
 
@@ -870,11 +914,12 @@ function setLevel(l) {
 const WEIGHTS = {
   artikel: 2, emoji: 2, listen: 2, pairs: 1.5, builder: 1.2, tf: 1.2, scramble: 1.5, odd: 1, grammar: 1.2, read: 1.2, verb: 1.5, gap: 1.2,
   // generated – endless variety
-  satz: 3, genbuild: 1.5, zahlen: 1.3, uhr: 1.2, gegenteil: 1.2, kalender: .8, perfekt: 1.8, wechsel: 1.4, adjektiv: 1.8,
+  satz: 3, genbuild: 1.5, zahlen: .6, uhr: .8, gegenteil: 1.2, kalender: .8, perfekt: 1.8, wechsel: 1.4, adjektiv: 1.8,
+  farben: 1.2, wortfeld: 1.4, familie: .9,
   lesson: 1.4, pruefung: .6, idiom: 1.8
 };
 const TYPE_LEVEL = { perfekt: 2, wechsel: 2, adjektiv: 3, idiom: 4 };   // minimum level for a game type
-const EASY = ["artikel", "emoji", "listen", "pairs", "scramble", "kalender"];   // picture/vocab games for beginners
+const EASY = ["artikel", "emoji", "listen", "pairs", "scramble", "kalender", "farben", "wortfeld", "familie"];   // picture/vocab games for beginners
 const BASIC = ["satz", "genbuild", "zahlen", "uhr", "gegenteil", "verb", "tf", "odd"];   // A1–B1 grammar drills
 function typeWeight(t) {
   if ((TYPE_LEVEL[t] || 1) > S.level) return 0;

@@ -282,3 +282,8 @@ mark { background: #facc15; color: #1a1300; border-radius: 5px; padding: 0 4px; 
 
 .t-idiom { background: linear-gradient(165deg, #831843, #6d28d9 55%, #1e40af); }
 .lvbtn small { overflow-wrap: anywhere; }
+
+/* colour game */
+.swatch { display: inline-block; width: 64px; height: 64px; border-radius: 16px; border: 3px solid rgba(255, 255, 255, .7); box-shadow: 0 4px 14px rgba(0, 0, 0, .35); vertical-align: middle; }
+.opts .btn .swatch { width: 44px; height: 44px; border-radius: 12px; }
+.reveal .swatch { width: 22px; height: 22px; border-radius: 6px; border-width: 2px; }

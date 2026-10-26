@@ -94,6 +94,46 @@ const OPPOSITES = [
 const DAYS = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"];
 const MONTHS = ["Jänner", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
 
+// colour | English | swatch
+const COLORS_DE = [["rot", "red", "#d62828"], ["blau", "blue", "#1d4ed8"], ["grün", "green", "#2a9d3c"], ["gelb", "yellow", "#f7d117"],
+  ["schwarz", "black", "#111111"], ["weiß", "white", "#ffffff"], ["braun", "brown", "#7b4a1e"], ["grau", "grey", "#8a8f98"],
+  ["orange", "orange", "#f77f00"], ["rosa", "pink", "#f7a8c4"], ["lila", "purple", "#7b3fb0"], ["türkis", "turquoise", "#19b5b0"]];
+// "Welche Farbe hat …?" – thing (with article) | colour
+const COLOR_THINGS = [["die Banane", "gelb"], ["der Schnee", "weiß"], ["das Gras", "grün"], ["der Paradeiser", "rot"], ["der Himmel", "blau"],
+  ["die Schokolade", "braun"], ["die Orange", "orange"], ["die Maus", "grau"], ["die Nacht", "schwarz"], ["das Schwein", "rosa"],
+  ["die Zitrone", "gelb"], ["die Gurke", "grün"], ["die Erdbeere", "rot"], ["die Milch", "weiß"], ["der Kaffee", "braun"],
+  ["das Meer", "blau"], ["der Elefant", "grau"], ["die Kohle", "schwarz"], ["der Lavendel", "lila"], ["die Karotte", "orange"]];
+// word fields: name | English | words (with article)
+const WORDFIELDS = [
+  ["Obst", "fruit", ["der Apfel", "die Banane", "die Birne", "die Erdbeere", "die Kirsche", "die Traube", "die Zitrone", "die Orange"]],
+  ["Gemüse", "vegetables", ["die Karotte", "die Gurke", "der Salat", "der Paradeiser", "der Erdapfel", "die Zwiebel", "der Kohl", "die Paprika"]],
+  ["Tiere", "animals", ["der Hund", "die Katze", "das Pferd", "die Kuh", "der Vogel", "die Maus", "der Löwe", "der Elefant"]],
+  ["Kleidung", "clothes", ["die Hose", "das Hemd", "die Jacke", "das Kleid", "der Schal", "die Socke", "der Hut", "der Handschuh"]],
+  ["Körper", "body", ["der Kopf", "die Hand", "der Fuß", "die Nase", "das Ohr", "der Mund", "das Auge", "das Bein"]],
+  ["Verkehr", "transport", ["das Auto", "der Zug", "der Bus", "das Fahrrad", "die Straßenbahn", "das Flugzeug", "das Taxi", "die U-Bahn"]],
+  ["Wetter", "weather", ["der Regen", "der Schnee", "die Sonne", "der Wind", "die Wolke", "das Gewitter", "der Nebel", "der Regenbogen"]],
+  ["Wohnung", "home", ["der Tisch", "der Stuhl", "das Bett", "das Sofa", "die Lampe", "der Schrank", "das Fenster", "die Tür"]],
+  ["Getränke", "drinks", ["das Wasser", "der Kaffee", "der Tee", "die Milch", "der Saft", "das Bier", "der Wein", "die Limonade"]]
+];
+// family riddles: question | right | wrong | wrong | English
+const FAMILY = [
+  ["Die Mutter von meiner Mutter ist meine …", "Oma", "Tante", "Schwester", "My mother's mother is my grandma."],
+  ["Der Vater von meinem Vater ist mein …", "Opa", "Onkel", "Bruder", "My father's father is my grandpa."],
+  ["Die Schwester von meinem Vater ist meine …", "Tante", "Oma", "Cousine", "My father's sister is my aunt."],
+  ["Der Bruder von meiner Mutter ist mein …", "Onkel", "Opa", "Cousin", "My mother's brother is my uncle."],
+  ["Der Sohn von meinen Eltern ist mein …", "Bruder", "Onkel", "Neffe", "My parents' son is my brother."],
+  ["Die Tochter von meinen Eltern ist meine …", "Schwester", "Tante", "Nichte", "My parents' daughter is my sister."],
+  ["Die Tochter von meiner Tante ist meine …", "Cousine", "Schwester", "Nichte", "My aunt's daughter is my cousin."],
+  ["Der Sohn von meinem Onkel ist mein …", "Cousin", "Bruder", "Neffe", "My uncle's son is my cousin."],
+  ["Der Sohn von meiner Schwester ist mein …", "Neffe", "Cousin", "Enkel", "My sister's son is my nephew."],
+  ["Die Tochter von meinem Bruder ist meine …", "Nichte", "Cousine", "Tante", "My brother's daughter is my niece."],
+  ["Der Sohn von meinem Sohn ist mein …", "Enkel", "Neffe", "Bruder", "My son's son is my grandson."],
+  ["Die Mutter von meinem Mann ist meine …", "Schwiegermutter", "Oma", "Tante", "My husband's mother is my mother-in-law."],
+  ["Meine Mutter und mein Vater sind meine …", "Eltern", "Großeltern", "Geschwister", "My mother and father are my parents."],
+  ["Mein Bruder und meine Schwester sind meine …", "Geschwister", "Eltern", "Cousins", "My brother and sister are my siblings."],
+  ["Meine Oma und mein Opa sind meine …", "Großeltern", "Eltern", "Enkel", "My grandma and grandpa are my grandparents."]
+];
+
 // Perfekt generator (A2+): infinitive | auxiliary | participle | rest of sentence | English past
 const PERFEKT = [
   ["machen", "haben", "gemacht", "die Hausaufgaben", "did the homework"], ["kaufen", "haben", "gekauft", "ein neues Handy", "bought a new phone"],
